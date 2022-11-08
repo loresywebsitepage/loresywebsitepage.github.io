@@ -1,0 +1,219 @@
+document.addEventListener('DOMContentLoaded', () => {
+    "use strict";
+  
+    /**
+     * Preloader
+     */
+    const preloader = document.querySelector('#preloader');
+    if (preloader) {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          preloader.classList.add('loaded');
+        }, 1000);
+        setTimeout(() => {
+          preloader.remove();
+        }, 2000);
+      });
+    }
+  
+    /**
+     * Mobile nav toggle
+     */
+    const mobileNavShow = document.querySelector('.mobile-nav-show');
+    const mobileNavHide = document.querySelector('.mobile-nav-hide');
+  
+    document.querySelectorAll('.mobile-nav-toggle').forEach(el => {
+      el.addEventListener('click', function(event) {
+        event.preventDefault();
+        mobileNavToogle();
+      })
+    });
+  
+    function mobileNavToogle() {
+      document.querySelector('body').classList.toggle('mobile-nav-active');
+      mobileNavShow.classList.toggle('d-none');
+      mobileNavHide.classList.toggle('d-none');
+    }
+  
+    /**
+     * Hide mobile nav on same-page/hash links
+     */
+    document.querySelectorAll('#navbar a').forEach(navbarlink => {
+  
+      if (!navbarlink.hash) return;
+  
+      let section = document.querySelector(navbarlink.hash);
+      if (!section) return;
+  
+      navbarlink.addEventListener('click', () => {
+        if (document.querySelector('.mobile-nav-active')) {
+          mobileNavToogle();
+        }
+      });
+  
+    });
+  
+    /**
+     * Toggle mobile nav dropdowns
+     */
+    const navDropdowns = document.querySelectorAll('.navbar .dropdown > a');
+  
+    navDropdowns.forEach(el => {
+      el.addEventListener('click', function(event) {
+        if (document.querySelector('.mobile-nav-active')) {
+          event.preventDefault();
+          this.classList.toggle('active');
+          this.nextElementSibling.classList.toggle('dropdown-active');
+  
+          let dropDownIndicator = this.querySelector('.dropdown-indicator');
+          dropDownIndicator.classList.toggle('bi-chevron-up');
+          dropDownIndicator.classList.toggle('bi-chevron-down');
+        }
+      })
+    });
+  
+    /**
+     * Scroll top button
+     */
+    const scrollTop = document.querySelector('.scroll-top');
+    if (scrollTop) {
+      const togglescrollTop = function() {
+        window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
+      }
+      window.addEventListener('load', togglescrollTop);
+      document.addEventListener('scroll', togglescrollTop);
+      scrollTop.addEventListener('click', window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      }));
+    }
+  
+    /**
+     * Initiate glightbox
+     */
+    const glightbox = GLightbox({
+      selector: '.glightbox'
+    });
+  
+    /**
+     * Init swiper slider with 1 slide at once in desktop view
+     */
+    new Swiper('.slides-1', {
+      speed: 600,
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false
+      },
+      slidesPerView: 'auto',
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'bullets',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      }
+    });
+  
+    /**
+     * Init swiper slider with 3 slides at once in desktop view
+     */
+    new Swiper('.slides-3', {
+      speed: 600,
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false
+      },
+      slidesPerView: 'auto',
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'bullets',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 40
+        },
+  
+        1200: {
+          slidesPerView: 3,
+        }
+      }
+    });
+  
+    /**
+     * Animation on scroll function and init
+     */
+    function aos_init() {
+      AOS.init({
+        duration: 1000,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+      });
+    }
+    window.addEventListener('load', () => {
+      aos_init();
+    });
+  
+  });
+
+  // This must be triggered by a user event.
+function copyText (text) {
+  // Create the textarea input to hold our text.
+  const element = document.createElement('textarea');
+  element.value = text;
+  // Add it to the document so that it can be focused.
+  document.body.appendChild(element);
+  // Focus on the element so that it can be copied.
+  element.focus();
+  element.setSelectionRange(0, element.value.length);
+  // Execute the copy command.
+  document.execCommand('copy');
+  // Remove the element to keep the document clear.
+  document.body.removeChild(element);
+  alert("Succesfully Copied!")
+}
+
+
+let button = document.querySelector(".primary-button");
+let item = document.querySelector(".primary-button .round");
+
+button.addEventListener("mouseenter", function(event) {
+  this.classList += " animate";
+
+  let buttonX = event.offsetX;
+  let buttonY = event.offsetY;
+
+  if (buttonY < 24) {
+    item.style.top = 0 + "px";
+  } else if (buttonY > 30) {
+    item.style.top = 48 + "px";
+  }
+
+  item.style.left = buttonX + "px";
+  item.style.width = "1px";
+  item.style.height = "1px";
+});
+
+button.addEventListener("mouseleave", function() {
+  this.classList.remove("animate");
+
+  let buttonX = event.offsetX;
+  let buttonY = event.offsetY;
+
+  if (buttonY < 24) {
+    item.style.top = 0 + "px";
+  } else if (buttonY > 30) {
+    item.style.top = 48 + "px";
+  }
+  item.style.left = buttonX + "px";
+});
